@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - Innovation Telecomunicaciones</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="index.html">
+                <img class="nav-logo" src="assets/logo-innovation.svg" alt="Innovation">
+            </a>
+            <div class="navbar-nav ms-auto flex-row align-items-center gap-1">
+                <a class="nav-link" href="index.html"><i class="bi bi-house me-1"></i>Inicio</a>
+                <a class="nav-link active clientes-only" href="clientes.html" style="display:none"><i class="bi bi-people me-1"></i>Clientes</a>
+                <a class="nav-link vendedor-only" href="ventas.html" style="display:none"><i class="bi bi-cart-check me-1"></i>Ventas</a>
+                <a class="nav-link soporte-only" href="tickets.html" style="display:none"><i class="bi bi-tools me-1"></i>Tickets</a>
+                <a class="nav-link cuadrilla-only" href="ordenes.html" style="display:none"><i class="bi bi-calendar-week me-1"></i>&Oacute;rdenes</a>
+                <a class="nav-link tecnico-only" href="tecnico.html" style="display:none"><i class="bi bi-person-badge me-1"></i>Mi Trabajo</a>
+                <a class="nav-link bodega-only cuadrilla-only" href="inventario.html" style="display:none"><i class="bi bi-box-seam me-1"></i>Inventario</a>
+                <a class="nav-link admin-only" href="usuarios.html" style="display:none"><i class="bi bi-person-gear me-1"></i>Usuarios</a>
+                <span class="nav-link text-light opacity-75 small me-1" id="navUserName" style="font-size:.85rem"></span>
+                <a class="nav-link logout-link" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4 py-4">
+        <div class="page-header fade-in">
+            <div>
+                <h2>Gesti&oacute;n de <span>Clientes</span></h2>
+                <p class="text-muted mb-0 small">Clientes, contratos comerciales y planes ISP</p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <button class="btn btn-outline-primary" id="btnNuevoPlan" onclick="abrirModalPlan()">
+                    <i class="bi bi-wifi me-1"></i> Nuevo Plan
+                </button>
+                <button class="btn btn-primary" id="btnNuevoCliente" onclick="abrirModalCliente()">
+                    <i class="bi bi-plus-circle me-1"></i> Nuevo Cliente
+                </button>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs mb-3 module-tabs" id="clientesTabs">
+            <li class="nav-item">
+                <button class="nav-link active" id="tabClientesBtn" onclick="mostrarModuloClientes('clientes')">
+                    <i class="bi bi-people me-1"></i>Clientes
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="tabPlanesBtn" onclick="mostrarModuloClientes('planes')">
+                    <i class="bi bi-router me-1"></i>Planes ISP
+                </button>
+            </li>
+        </ul>
+
+        <div class="table-wrapper fade-in" id="clientesPanel">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>raz&oacute;n Social</th>
+                            <th>Documento</th>
+                            <th>Email</th>
+                            <th>Tel&eacute;fono</th>
+                            <th>Ciudad</th>
+                            <th>Plan / TV</th>
+                            <th>Cartera</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientesTable">
+                        <tr><td colspan="8" class="text-center py-4 text-muted">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="table-wrapper fade-in" id="planesPanel" style="display:none">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Plan</th>
+                            <th>Tipo</th>
+                            <th>Velocidad</th>
+                            <th>Precio mensual</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="planesTable">
+                        <tr><td colspan="6" class="text-center py-4 text-muted">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nuevo Cliente -->
+    <div class="modal fade" id="nuevoClienteModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clienteModalTitle">Nuevo Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="nuevoClienteForm">
+                        <input type="hidden" id="clienteId">
+                        <div class="mb-3">
+                            <label for="razonSocial" class="form-label">raz&oacute;n Social</label>
+                            <input type="text" class="form-control" id="razonSocial" placeholder="Nombre empresa o persona" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="documento" class="form-label">Documento (NIT / CC)</label>
+                            <input type="text" class="form-control" id="documento" placeholder="900123456-1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailCliente" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="emailCliente" placeholder="contacto@empresa.com" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label for="telefono" class="form-label">Tel&eacute;fono</label>
+                                <input type="text" class="form-control" id="telefono" placeholder="601 234 5678" required>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label for="ciudad" class="form-label">Ciudad</label>
+                                <input type="text" class="form-control" id="ciudad" placeholder="Bogot&mdash;" required>
+                            </div>
+                        </div>
+                        <hr class="my-2">
+                        <p class="text-muted small mb-2"><i class="bi bi-wifi me-1"></i><strong>Plan ISP</strong> &mdash; selecciona el servicio de internet del cliente</p>
+                        <div class="mb-3">
+                            <label for="planInternet" class="form-label">Plan de Internet</label>
+                            <select class="form-select" id="planInternet">
+                                <option value="">&mdash; Sin plan por ahora &mdash;</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 d-flex align-items-center gap-3">
+                            <div class="form-check form-switch mb-0">
+                                <input class="form-check-input" type="checkbox" id="incluyeTv" role="switch">
+                                <label class="form-check-label" for="incluyeTv">
+                                    <i class="bi bi-tv me-1"></i>&iquest;Incluye TV?
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3" id="camposIsp" style="display:none">
+                            <label for="metodoPago" class="form-label">M&eacute;todo de pago</label>
+                            <select class="form-select" id="metodoPago">
+                                <option value="EFECTIVO">Efectivo</option>
+                                <option value="TRANSFERENCIA">Transferencia bancaria</option>
+                                <option value="TARJETA">Tarjeta d&eacute;bito/cr&eacute;dito</option>
+                                <option value="PSE">PSE</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="nuevoClienteForm" class="btn btn-primary" id="btnGuardarCliente">
+                        <i class="bi bi-save me-1"></i> Guardar Cliente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Plan ISP -->
+    <div class="modal fade" id="planModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="planModalTitle"><i class="bi bi-router me-2"></i>Nuevo Plan ISP</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="planForm">
+                        <input type="hidden" id="planId">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre del plan <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="planNombre" placeholder="Plan Hogar 100 Megas" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tipo</label>
+                                <select class="form-select" id="planTipo">
+                                    <option value="INTERNET">Internet</option>
+                                    <option value="INTERNET_TV">Internet + TV</option>
+                                    <option value="EMPRESARIAL">Empresarial</option>
+                                    <option value="OTRO">Otro</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Velocidad</label>
+                                <input type="text" class="form-control" id="planVelocidad" placeholder="100 Mbps">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Precio mensual <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="planPrecio" min="0" step="1000" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Ancho de banda</label>
+                                <input type="number" class="form-control" id="planLimite" min="0" placeholder="100">
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label">Descripci&oacute;n</label>
+                            <textarea class="form-control" id="planDescripcion" rows="2" placeholder="Incluye instalaci&oacute;n, router, soporte..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="planForm" class="btn btn-primary" id="btnGuardarPlan">
+                        <i class="bi bi-save me-1"></i> Guardar Plan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detalle Cliente -->
+    <div class="modal fade" id="detalleClienteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-building me-2"></i>Detalle del Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="client-detail-card">
+                        <div class="client-avatar" id="detalleClienteInicial">IN</div>
+                        <div>
+                            <h5 id="detalleClienteNombre" class="mb-1">Cliente</h5>
+                            <span class="client-status"><i class="bi bi-check-circle-fill"></i> Cliente activo</span>
+                        </div>
+                    </div>
+                    <div class="detail-grid mt-4">
+                        <div class="detail-item">
+                            <span>Documento</span>
+                            <strong id="detalleClienteDocumento">-</strong>
+                        </div>
+                        <div class="detail-item">
+                            <span>Email</span>
+                            <strong id="detalleClienteEmail">-</strong>
+                        </div>
+                        <div class="detail-item">
+                            <span>Tel&eacute;fono</span>
+                            <strong id="detalleClienteTelefono">-</strong>
+                        </div>
+                        <div class="detail-item">
+                            <span>Ciudad</span>
+                            <strong id="detalleClienteCiudad">-</strong>
+                        </div>
+                        <div class="detail-item">
+                            <span>Cartera</span>
+                            <strong id="detalleClienteCartera">-</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                        <i class="bi bi-check2 me-1"></i> Entendido
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Eliminaci&oacute;n -->
+    <div class="modal fade" id="confirmarEliminarClienteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header danger-header">
+                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Eliminar cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-1 fw-semibold">&iquest;Deseas eliminar este cliente?</p>
+                    <p class="text-muted small mb-0" id="clienteEliminarNombre">Esta acci&oacute;n no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarEliminarCliente">
+                        <i class="bi bi-trash3 me-1"></i> Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Plan -->
+    <div class="modal fade" id="confirmarPlanModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header danger-header">
+                    <h5 class="modal-title"><i class="bi bi-slash-circle me-2"></i>Desactivar plan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-1 fw-semibold">&iquest;Deseas desactivar este plan?</p>
+                    <p class="text-muted small mb-0" id="planDesactivarNombre">El plan dejar&mdash; de estar disponible para nuevas ventas.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarDesactivarPlan">
+                        <i class="bi bi-slash-circle me-1"></i> Desactivar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="clientesToast" class="toast align-items-center text-bg-success border-0" role="status" aria-live="polite" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="clientesToastTexto">Operaci&oacute;n completada</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <span class="text-muted">&mdash; 2026 Innovation Telecomunicaciones S.A.S.</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/config.js?v=20260530-4"></script>
+    <script src="js/clientes.js"></script>
+</body>
+</html>
+
+
+

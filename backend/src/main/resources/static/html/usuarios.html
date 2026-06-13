@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios — Innovation Telecomunicaciones</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .badge-admin  { background: linear-gradient(135deg,#9166CC,#7550B0); color:#fff; padding:.35em .75em; border-radius:20px; font-size:.78rem; }
+        .badge-user   { background: linear-gradient(135deg,#3DC947,#2DAD36); color:#fff; padding:.35em .75em; border-radius:20px; font-size:.78rem; }
+        .avatar-circle { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#9166CC,#3DC947);
+                         display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:.85rem; flex-shrink:0; }
+        .btn-outline-purple { color:#9166CC; border-color:#9166CC; }
+        .btn-outline-purple:hover { background:#9166CC; color:#fff; }
+        .text-purple { color:#9166CC !important; }
+        .stat-card-sm { background:#fff; border-radius:12px; padding:1rem 1.5rem; box-shadow:0 2px 8px rgba(0,0,0,.08);
+                        border-left:4px solid var(--brand-purple); text-align:center; }
+        .stat-card-sm .stat-val { font-size:2rem; font-weight:700; color:var(--brand-purple); }
+        .stat-card-sm .stat-lbl { font-size:.8rem; color:#666; text-transform:uppercase; letter-spacing:.05em; }
+    </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/index.html">
+            <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="20" cy="10" rx="7" ry="10" fill="#9166CC" opacity="0.9"/>
+                <ellipse cx="30" cy="20" rx="7" ry="10" fill="#3DC947" opacity="0.9" transform="rotate(90 30 20)"/>
+                <ellipse cx="20" cy="30" rx="7" ry="10" fill="#9166CC" opacity="0.7"/>
+                <ellipse cx="10" cy="20" rx="7" ry="10" fill="#3DC947" opacity="0.7" transform="rotate(90 10 20)"/>
+                <circle cx="20" cy="20" r="4" fill="#fff"/>
+            </svg>
+            <span>Innovation ISP</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="/index.html"><i class="bi bi-house me-1"></i>Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="/clientes.html"><i class="bi bi-people me-1"></i>Clientes</a></li>
+                <li class="nav-item admin-only">
+                    <a class="nav-link active" href="/usuarios.html"><i class="bi bi-person-gear me-1"></i>Usuarios</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item me-3">
+                    <span class="text-light opacity-75 small">
+                        <i class="bi bi-person-circle me-1"></i><span id="navUserName"></span>
+                        <span class="badge ms-1" style="background:rgba(255,255,255,.2);font-size:.7rem;" id="navRolBadge"></span>
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <button class="btn btn-outline-light btn-sm" onclick="logout()">
+                        <i class="bi bi-box-arrow-right me-1"></i>Salir
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- ===== CONTENIDO ===== -->
+<div class="container-fluid px-4 py-4 fade-in">
+
+    <!-- Encabezado -->
+    <div class="page-header mb-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h2 class="mb-1"><i class="bi bi-person-gear me-2 text-purple"></i>Gestión de Usuarios</h2>
+                <p class="text-muted mb-0">Administra cuentas de acceso y permisos del sistema</p>
+            </div>
+            <button class="btn btn-brand" data-bs-toggle="modal" data-bs-target="#modalNuevoUsuario">
+                <i class="bi bi-person-plus me-1"></i>Nuevo Usuario
+            </button>
+        </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-card-sm">
+                <div class="stat-val" id="totalUsuarios">—</div>
+                <div class="stat-lbl">Total Usuarios</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card-sm" style="border-left-color:var(--brand-green)">
+                <div class="stat-val" style="color:var(--brand-green)" id="totalActivos">—</div>
+                <div class="stat-lbl">Activos</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card-sm">
+                <div class="stat-val" id="totalAdmins">—</div>
+                <div class="stat-lbl">Administradores</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="table-wrapper">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Teléfono</th>
+                        <th>Fecha Registro</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaUsuarios">
+                    <tr><td colspan="7" class="text-center py-4">
+                        <div class="spinner-border text-purple" role="status"></div>
+                    </td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL: NUEVO USUARIO ===== -->
+<div class="modal fade" id="modalNuevoUsuario" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i>Nuevo Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="alertaNuevoUsuario" class="alert alert-danger" style="display:none"></div>
+                <form id="nuevoUsuarioForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="uNombre" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Apellido <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="uApellido" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="uEmail" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Contraseña <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="uContrasena" required minlength="8">
+                                <button type="button" class="btn btn-outline-secondary"
+                                    onclick="togglePwd('uContrasena', this)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            <small class="text-muted">Mínimo 8 caracteres</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Rol <span class="text-danger">*</span></label>
+                            <select class="form-select" id="uRol" required>
+                                <option value="USER" selected>Usuario (USER)</option>
+                                <option value="ADMIN">Administrador (ADMIN)</option>
+                            </select>
+                            <small class="text-muted">Los ADMIN pueden gestionar usuarios y configuración</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="uTelefono">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Empresa</label>
+                            <input type="text" class="form-control" id="uEmpresa">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Documento</label>
+                            <input type="text" class="form-control" id="uDocumento">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="nuevoUsuarioForm" class="btn btn-brand" id="btnGuardarUsuario">
+                    <span class="spinner-border spinner-border-sm d-none me-1" id="btnGuardarSpinner"></span>
+                    <span id="btnGuardarText">Guardar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL: EDITAR USUARIO ===== -->
+<div class="modal fade" id="modalEditarUsuario" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editar Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="alertaEditarUsuario" class="alert alert-danger" style="display:none"></div>
+                <form id="editarUsuarioForm">
+                    <input type="hidden" id="eId">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="eNombre" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Apellido <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="eApellido" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="eEmail" readonly>
+                            <small class="text-muted">El email no se puede cambiar</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Rol <span class="text-danger">*</span></label>
+                            <select class="form-select" id="eRol" required>
+                                <option value="USER">Usuario (USER)</option>
+                                <option value="ADMIN">Administrador (ADMIN)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="eTelefono">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Empresa</label>
+                            <input type="text" class="form-control" id="eEmpresa">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="editarUsuarioForm" class="btn btn-brand">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toastMsg" class="toast align-items-center text-bg-success border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body" id="toastTexto"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<footer class="footer mt-auto py-3">
+    <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+        <span class="text-muted small">© 2024 Innovation Telecomunicaciones ISP</span>
+        <span class="text-muted small">Sistema de Gestión</span>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/config.js"></script>
+<script src="/js/usuarios.js"></script>
+<script>
+    // Mostrar nombre y rol en navbar
+    const _ud = getUserData();
+    if (_ud) {
+        const nm = document.getElementById('navUserName');
+        const rb = document.getElementById('navRolBadge');
+        if (nm) nm.textContent = _ud.nombre || _ud.email;
+        if (rb) rb.textContent = _ud.rol;
+    }
+
+    function togglePwd(id, btn) {
+        const input = document.getElementById(id);
+        const isText = input.type === 'text';
+        input.type = isText ? 'password' : 'text';
+        btn.innerHTML = `<i class="bi bi-${isText ? 'eye' : 'eye-slash'}"></i>`;
+    }
+</script>
+</body>
+</html>

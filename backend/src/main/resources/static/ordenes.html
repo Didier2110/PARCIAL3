@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>&Oacute;rdenes de Trabajo &mdash; Innovation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<!-- ======= NAVBAR ======= -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand" href="index.html">
+            <img class="nav-logo" src="assets/logo-innovation.svg" alt="Innovation">
+        </a>
+        <div class="navbar-nav ms-auto flex-row align-items-center gap-1">
+            <a class="nav-link" href="index.html"><i class="bi bi-house me-1"></i>Inicio</a>
+            <a class="nav-link clientes-only" href="clientes.html" style="display:none"><i class="bi bi-people me-1"></i>Clientes</a>
+            <a class="nav-link vendedor-only" href="ventas.html" style="display:none"><i class="bi bi-cart-check me-1"></i>Ventas</a>
+            <a class="nav-link soporte-only" href="tickets.html" style="display:none"><i class="bi bi-tools me-1"></i>Tickets</a>
+            <a class="nav-link active cuadrilla-only" href="ordenes.html" style="display:none"><i class="bi bi-calendar-week me-1"></i>&Oacute;rdenes</a>
+            <a class="nav-link tecnico-only" href="tecnico.html" style="display:none"><i class="bi bi-person-badge me-1"></i>Mi Trabajo</a>
+            <a class="nav-link bodega-only cuadrilla-only" href="inventario.html" style="display:none"><i class="bi bi-box-seam me-1"></i>Inventario</a>
+            <a class="nav-link admin-only" href="usuarios.html" style="display:none"><i class="bi bi-person-gear me-1"></i>Usuarios</a>
+            <span class="nav-link text-light opacity-75 small me-1" id="navUserName" style="font-size:.85rem"></span>
+            <a class="nav-link logout-link" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ======= CONTENIDO ======= -->
+<div class="container-fluid px-4 py-4">
+
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-0"><i class="bi bi-calendar-week me-2 text-primary"></i>&Oacute;rdenes de Trabajo</h2>
+            <p class="text-muted mb-0 small">Gesti&oacute;n y asignaci&oacute;n de &Oacute;rdenes &mdash; Coordinaci&oacute;n T&eacute;cnica</p>
+        </div>
+        <button class="btn btn-primary" onclick="abrirModalCrear()">
+            <i class="bi bi-plus-circle me-1"></i>Nueva Orden
+        </button>
+    </div>
+
+    <!-- Estad&iacute;sticas r&aacute;pidas -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card text-center py-3">
+                <div class="fs-3 fw-bold text-warning" id="statPendiente">0</div>
+                <div class="small text-muted">Pendientes</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card text-center py-3">
+                <div class="fs-3 fw-bold text-info" id="statAsignada">0</div>
+                <div class="small text-muted">Asignadas</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card text-center py-3">
+                <div class="fs-3 fw-bold text-primary" id="statProgreso">0</div>
+                <div class="small text-muted">En Progreso</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card text-center py-3">
+                <div class="fs-3 fw-bold text-success" id="statCompletada">0</div>
+                <div class="small text-muted">Completadas</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros y b&uacute;squeda -->
+    <div class="card mb-4">
+        <div class="card-body py-3">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label small mb-1">Estado</label>
+                    <select class="form-select form-select-sm" id="filtroEstado" onchange="cargarOrdenes()">
+                        <option value="">Todos</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="ASIGNADA">Asignada</option>
+                        <option value="EN_PROGRESO">En Progreso</option>
+                        <option value="COMPLETADA">Completada (por validar)</option>
+                        <option value="VALIDADA">Validada</option>
+                        <option value="RECHAZADA">Rechazada</option>
+                        <option value="CANCELADA">Cancelada</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small mb-1">Tipo</label>
+                    <select class="form-select form-select-sm" id="filtroTipo" onchange="filtrarTabla()">
+                        <option value="">Todos</option>
+                        <option value="INSTALACION">Instalaci&oacute;n</option>
+                        <option value="MANTENIMIENTO">Mantenimiento</option>
+                        <option value="AVERIA">Aver&iacute;a</option>
+                        <option value="RETIRO">Retiro</option>
+                        <option value="TRASLADO">Traslado</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small mb-1">Buscar</label>
+                    <input type="text" class="form-control form-control-sm" id="buscador"
+                           placeholder="Cliente, direcci&oacute;n, T&eacute;cnico..." oninput="filtrarTabla()">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-outline-secondary btn-sm w-100" onclick="cargarOrdenes()">
+                        <i class="bi bi-arrow-clockwise me-1"></i>Recargar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de &Oacute;rdenes -->
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>T&iacute;tulo / Cliente</th>
+                            <th>Direcci&oacute;n</th>
+                            <th>Programada</th>
+                            <th>T&eacute;cnico</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaOrdenes">
+                        <tr><td colspan="7" class="text-center py-4 text-muted">Cargando &Oacute;rdenes...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL: Crear orden ===== -->
+<div class="modal fade" id="modalCrear" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>Nueva Orden de Trabajo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCrear">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Tipo <span class="text-danger">*</span></label>
+                            <select class="form-select" id="cTipo" required>
+                                <option value="">Seleccione...</option>
+                                <option value="INSTALACION">Instalaci&oacute;n</option>
+                                <option value="MANTENIMIENTO">Mantenimiento</option>
+                                <option value="AVERIA">Aver&iacute;a</option>
+                                <option value="RETIRO">Retiro de Equipo</option>
+                                <option value="TRASLADO">Traslado</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Cliente</label>
+                            <select class="form-select" id="cClienteId">
+                                <option value="">Sin cliente vinculado</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">T&iacute;tulo <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="cTitulo" required
+                                   placeholder="Ej: Instalaci&oacute;n fibra &oacute;ptica &mdash; Cr 15 #93-47">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Descripci&oacute;n</label>
+                            <textarea class="form-control" id="cDescripcion" rows="2"
+                                      placeholder="Descripci&oacute;n del trabajo a realizar..."></textarea>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">Direcci&oacute;n de servicio <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="cDireccion" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Ciudad</label>
+                            <input type="text" class="form-control" id="cCiudad">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Fecha programada <span class="text-danger">*</span></label>
+                            <input type="datetime-local" class="form-control" id="cFechaProgramada" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">T&eacute;cnico asignado</label>
+                            <select class="form-select" id="cTecnicoId">
+                                <option value="">Asignar despu&eacute;s...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Plan de internet</label>
+                            <input type="text" class="form-control" id="cPlanInternet"
+                                   placeholder="Ej: Plan Hogar 100 Megas">
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="form-check mt-4">
+                                <input type="checkbox" class="form-check-input" id="cIncluyeTv">
+                                <label class="form-check-label" for="cIncluyeTv">Incluye TV</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Referencia / Punto de llegada</label>
+                            <input type="text" class="form-control" id="cReferencia"
+                                   placeholder="Al frente del supermercado, piso 3 apto 302...">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" onclick="guardarOrden()">
+                    <i class="bi bi-save me-1"></i>Crear Orden
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL: Ver / asignar / validar ===== -->
+<div class="modal fade" id="modalDetalle" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleTitle">Detalle de Orden</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="detalleBody">
+                <!-- generado por JS -->
+            </div>
+            <div class="modal-footer" id="detallePie">
+                <!-- botones din&aacute;micos -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL: Validar / Rechazar ===== -->
+<div class="modal fade" id="modalValidar" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="validarTitle">Validar entrega</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Observaciones del jefe de cuadrilla</label>
+                    <textarea class="form-control" id="validarObs" rows="3"
+                              placeholder="Observaciones sobre la entrega (opcional)"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-danger" id="btnRechazar">
+                    <i class="bi bi-x-circle me-1"></i>Rechazar
+                </button>
+                <button class="btn btn-success" id="btnAprobar">
+                    <i class="bi bi-check-circle me-1"></i>Validar y Aprobar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/config.js?v=20260530-4"></script>
+<script src="js/ordenes.js"></script>
+</body>
+</html>
+
+
+

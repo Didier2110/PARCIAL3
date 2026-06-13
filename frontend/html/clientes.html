@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - Innovation Telecomunicaciones</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">Innovation Telecomunicaciones ISP</span>
+            <div class="navbar-nav">
+                <a class="nav-link" href="index.html">Inicio</a>
+                <a class="nav-link active" href="clientes.html">Clientes</a>
+                <a class="nav-link" href="servicios.html">Servicios</a>
+                <a class="nav-link" href="suscripciones.html">Suscripciones</a>
+                <a class="nav-link" href="facturas.html">Facturas</a>
+                <a class="nav-link" href="tickets.html">Tickets</a>
+                <a class="nav-link" href="#" onclick="logout()">Cerrar Sesión</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2>Gestión de Clientes</h2>
+        
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#nuevoClienteModal">Nuevo Cliente</button>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Razón Social</th>
+                        <th>Documento</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Ciudad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="clientesTable">
+                    <tr><td colspan="6" class="text-center">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Nuevo Cliente -->
+    <div class="modal fade" id="nuevoClienteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="nuevoClienteForm">
+                        <div class="mb-3">
+                            <label for="razonSocial" class="form-label">Razón Social</label>
+                            <input type="text" class="form-control" id="razonSocial" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="documento" class="form-label">Documento</label>
+                            <input type="text" class="form-control" id="documento" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ciudad" class="form-label">Ciudad</label>
+                            <input type="text" class="form-control" id="ciudad" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/clientes.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Innovation Telecomunicaciones</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body class="login-body">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="login-card">
+                    <div class="login-header">
+                        <h2>Innovation Telecomunicaciones</h2>
+                        <p>Sistema de Gestión ISP</p>
+                    </div>
+
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Iniciar Sesión</button>
+                    </form>
+
+                    <div id="errorMessage" class="alert alert-danger" style="display:none;"></div>
+
+                    <div class="text-center">
+                        <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/login.js"></script>
+</body>
+</html>

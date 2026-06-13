@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation Telecomunicaciones - Dashboard</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">Innovation Telecomunicaciones ISP</span>
+            <div class="navbar-nav">
+                <a class="nav-link" href="index.html">Inicio</a>
+                <a class="nav-link" href="clientes.html">Clientes</a>
+                <a class="nav-link" href="servicios.html">Servicios</a>
+                <a class="nav-link" href="suscripciones.html">Suscripciones</a>
+                <a class="nav-link" href="facturas.html">Facturas</a>
+                <a class="nav-link" href="tickets.html">Tickets</a>
+                <a class="nav-link" href="#" onclick="logout()">Cerrar Sesión</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Clientes Activos</h5>
+                        <p class="card-text display-4" id="clientesCount">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Suscripciones</h5>
+                        <p class="card-text display-4" id="suscripcionesCount">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Facturas Pendientes</h5>
+                        <p class="card-text display-4" id="facturasCount">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Tickets Abiertos</h5>
+                        <p class="card-text display-4" id="ticketsCount">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h2>Bienvenido al Sistema</h2>
+                <p>Sistema Integral de Gestión de Servicios ISP</p>
+                <p>Utiliza el menú de navegación para acceder a los diferentes módulos del sistema.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">© 2026 Innovation Telecomunicaciones S.A.S. Todos los derechos reservados.</span>
+        </div>
+    </footer>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

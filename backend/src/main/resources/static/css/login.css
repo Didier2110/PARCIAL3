@@ -1,0 +1,139 @@
+/* === Innovation Telecomunicaciones - Login Styles === */
+:root {
+    --brand-purple: #168DFF;
+    --brand-purple-dark: #0A57C8;
+    --brand-green: #00C2FF;
+    --brand-dark: #231F20;
+    --brand-gray: #4f4f5a;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.login-body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 50% 38%, rgba(22, 141, 255, 0.16), transparent 34%),
+        linear-gradient(145deg, #020814 0%, #04152F 48%, #061D44 100%);
+    font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 430px;
+    padding: 20px;
+}
+
+.login-card {
+    background: rgba(247, 250, 255, 0.96);
+    border: 1px solid rgba(22, 141, 255, 0.18);
+    border-radius: 18px;
+    box-shadow: 0 22px 52px rgba(0, 8, 22, 0.48);
+    padding: 42px 40px 40px;
+    animation: slideUp 0.35s ease-out;
+}
+
+.brand-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(145deg, #020814 0%, #061D44 100%);
+    border: 1px solid rgba(22, 141, 255, 0.22);
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+}
+
+.login-logo {
+    width: min(300px, 100%);
+    height: auto;
+    display: block;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.login-header p {
+    color: var(--brand-gray);
+    font-size: 13px;
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--brand-dark);
+    margin-bottom: 6px;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #d8d8de;
+    padding: 11px 14px;
+    font-size: 14px;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+    border-color: var(--brand-purple);
+    box-shadow: 0 0 0 3px rgba(145, 102, 204, 0.16);
+    background: #fff;
+}
+
+.btn-login {
+    width: 100%;
+    margin-top: 4px;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    background: linear-gradient(135deg, #168DFF 0%, #0A57C8 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.btn-login:hover {
+    background: linear-gradient(135deg, #0A57C8 0%, #063B88 100%);
+    box-shadow: 0 8px 18px rgba(22, 141, 255, 0.35);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+.alert {
+    border-radius: 10px;
+    border: none;
+    font-size: 13px;
+    padding: 10px 14px;
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.58);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

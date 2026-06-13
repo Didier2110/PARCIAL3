@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 76" role="img" aria-label="Innovation Telecomunicaciones ISP">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#168DFF"/>
+      <stop offset="100%" stop-color="#00C2FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ── Icono: señal de conectividad ── -->
+  <!-- Punto de origen -->
+  <circle cx="34" cy="62" r="6.5" fill="#00C2FF"/>
+
+  <!-- Arco 1 — cercano -->
+  <path d="M19,50 A15,15 0 0,1 49,50"
+        fill="none" stroke="url(#g1)" stroke-width="5.5" stroke-linecap="round"/>
+
+  <!-- Arco 2 — medio -->
+  <path d="M6,39 A28,28 0 0,1 62,39"
+        fill="none" stroke="#168DFF" stroke-width="5" stroke-linecap="round" opacity="0.72"/>
+
+  <!-- Arco 3 — lejano -->
+  <path d="M2,31 A32,32 0 0,1 66,31"
+        fill="none" stroke="#168DFF" stroke-width="4.5" stroke-linecap="round" opacity="0.38"/>
+
+  <!-- Separador vertical -->
+  <line x1="80" y1="10" x2="80" y2="67"
+        stroke="rgba(0,194,255,0.28)" stroke-width="1.5"/>
+
+  <!-- ── Texto de marca ── -->
+  <text x="90" y="52"
+        fill="#FFFFFF"
+        font-family="Segoe UI, system-ui, -apple-system, Helvetica Neue, Arial, sans-serif"
+        font-size="33" font-weight="300" letter-spacing="-0.6">innovation</text>
+
+  <!-- Símbolo ® -->
+  <text x="278" y="37"
+        fill="rgba(255,255,255,0.50)"
+        font-family="Segoe UI, Arial, sans-serif"
+        font-size="12">&#174;</text>
+
+  <!-- Subtítulo ISP -->
+  <text x="91" y="68"
+        fill="#168DFF"
+        font-family="Segoe UI, system-ui, -apple-system, Helvetica Neue, Arial, sans-serif"
+        font-size="10.5" font-weight="700" letter-spacing="2.8">TELECOMUNICACIONES</text>
+</svg>

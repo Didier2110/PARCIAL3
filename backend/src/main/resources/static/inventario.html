@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario &mdash; Innovation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<!-- ======= NAVBAR ======= -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand" href="index.html">
+            <img class="nav-logo" src="assets/logo-innovation.svg" alt="Innovation">
+        </a>
+        <div class="navbar-nav ms-auto flex-row align-items-center gap-1">
+            <a class="nav-link" href="index.html"><i class="bi bi-house me-1"></i>Inicio</a>
+            <a class="nav-link clientes-only" href="clientes.html" style="display:none"><i class="bi bi-people me-1"></i>Clientes</a>
+            <a class="nav-link vendedor-only" href="ventas.html" style="display:none"><i class="bi bi-cart-check me-1"></i>Ventas</a>
+            <a class="nav-link soporte-only" href="tickets.html" style="display:none"><i class="bi bi-tools me-1"></i>Tickets</a>
+            <a class="nav-link cuadrilla-only" href="ordenes.html" style="display:none"><i class="bi bi-calendar-week me-1"></i>&Oacute;rdenes</a>
+            <a class="nav-link tecnico-only" href="tecnico.html" style="display:none"><i class="bi bi-person-badge me-1"></i>Mi Trabajo</a>
+            <a class="nav-link active bodega-only cuadrilla-only" href="inventario.html" style="display:none"><i class="bi bi-box-seam me-1"></i>Inventario</a>
+            <a class="nav-link admin-only" href="usuarios.html" style="display:none"><i class="bi bi-person-gear me-1"></i>Usuarios</a>
+            <span class="nav-link text-light opacity-75 small me-1" id="navUserName" style="font-size:.85rem"></span>
+            <a class="nav-link logout-link" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ======= CONTENIDO ======= -->
+<div class="container-fluid px-4 py-4">
+
+    <!-- Tabs principales -->
+    <ul class="nav nav-tabs module-tabs mb-4" id="invTabs">
+        <li class="nav-item">
+            <button class="nav-link active" onclick="mostrarTab('stock')">
+                <i class="bi bi-box-seam me-1"></i>Stock
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" onclick="mostrarTab('solicitudes')">
+                <i class="bi bi-clipboard-check me-1"></i>Solicitudes de Material
+                <span class="badge bg-danger ms-1" id="badgePendientes" style="display:none">0</span>
+            </button>
+        </li>
+    </ul>
+
+    <!-- ===== TAB: STOCK ===== -->
+    <div id="tabStock">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h2 class="fw-bold mb-0"><i class="bi bi-box-seam me-2 text-primary"></i>Inventario de Materiales</h2>
+                <p class="text-muted mb-0 small">Control de stock &mdash; Bodega</p>
+            </div>
+            <button class="btn btn-primary" onclick="abrirModalItem()">
+                <i class="bi bi-plus-circle me-1"></i>Nuevo Item
+            </button>
+        </div>
+
+        <!-- Alertas de stock bajo -->
+        <div id="alertaStockBajo" class="mb-3"></div>
+
+        <!-- Estad&iacute;sticas -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="card text-center py-3">
+                    <div class="fs-3 fw-bold text-primary" id="statTotal">0</div>
+                    <div class="small text-muted">Items en catalogo</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card text-center py-3">
+                    <div class="fs-3 fw-bold text-success" id="statDisponible">0</div>
+                    <div class="small text-muted">Con stock disponible</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card text-center py-3">
+                    <div class="fs-3 fw-bold text-warning" id="statBajo">0</div>
+                    <div class="small text-muted">Stock bajo / alerta</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card text-center py-3">
+                    <div class="fs-3 fw-bold text-danger" id="statCero">0</div>
+                    <div class="small text-muted">Sin stock</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card mb-3">
+            <div class="card-body py-2">
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <select class="form-select form-select-sm" id="filtroCategoria" onchange="filtrarStock()">
+                            <option value="">Todas las Categor&iacute;as</option>
+                            <option value="CABLE">Cable</option>
+                            <option value="ROUTER">Router / Equipo</option>
+                            <option value="FIBRA">Fibra &oacute;ptica</option>
+                            <option value="CONECTOR">Conector / Accesorio</option>
+                            <option value="HERRAMIENTA">Herramienta</option>
+                            <option value="OTRO">Otro</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control form-control-sm" id="buscadorStock"
+                               placeholder="Buscar por nombre, referencia, n&uacute;mero de serie..."
+                               oninput="filtrarStock()">
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-outline-secondary btn-sm w-100" onclick="cargarStock()">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Recargar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla stock -->
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Categor&iacute;a</th>
+                                <th>N.&mdash; Serie</th>
+                                <th>Cantidad</th>
+                                <th>Reservada</th>
+                                <th>Disponible</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaStock">
+                            <tr><td colspan="8" class="text-center py-4 text-muted">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TAB: SOLICITUDES ===== -->
+    <div id="tabSolicitudes" style="display:none">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h2 class="fw-bold mb-0"><i class="bi bi-clipboard-check me-2 text-primary"></i>Solicitudes de Material</h2>
+                <p class="text-muted mb-0 small">Aprobaci&oacute;n y despacho de materiales a T&eacute;cnicos</p>
+            </div>
+            <div class="d-flex gap-2">
+                <select class="form-select form-select-sm" id="filtroEstadoSol" onchange="cargarSolicitudes()">
+                    <option value="">Todas</option>
+                    <option value="PENDIENTE">Pendientes</option>
+                    <option value="APROBADA">Aprobadas</option>
+                    <option value="DESPACHADA">Despachadas</option>
+                    <option value="RECHAZADA">Rechazadas</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="listaSolicitudes">
+            <p class="text-center text-muted py-4">Cargando solicitudes...</p>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL: Item de inventario ===== -->
+<div class="modal fade" id="modalItem" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="itemModalTitle">Nuevo Item de Inventario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formItem">
+                    <input type="hidden" id="iId">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label">Nombre <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="iNombre" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Categor&iacute;a</label>
+                            <select class="form-select" id="iCategoria">
+                                <option value="CABLE">Cable</option>
+                                <option value="ROUTER">Router / Equipo</option>
+                                <option value="FIBRA">Fibra &oacute;ptica</option>
+                                <option value="CONECTOR">Conector / Accesorio</option>
+                                <option value="HERRAMIENTA">Herramienta</option>
+                                <option value="OTRO">Otro</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Descripci&oacute;n</label>
+                            <input type="text" class="form-control" id="iDescripcion">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Cantidad <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="iCantidad" min="0" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Stock m&iacute;nimo</label>
+                            <input type="number" class="form-control" id="iCantidadMinima" min="0" value="0">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Unidad</label>
+                            <input type="text" class="form-control" id="iUnidad" placeholder="metros, und, rollo...">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Precio unitario</label>
+                            <input type="number" class="form-control" id="iPrecio" min="0" step="0.01">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">n&uacute;mero de serie</label>
+                            <input type="text" class="form-control" id="iNumeroSerie" placeholder="Si aplica">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Ubicaci&oacute;n / Bodega</label>
+                            <input type="text" class="form-control" id="iUbicacion">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Proveedor</label>
+                            <input type="text" class="form-control" id="iProveedor">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Referencia interna</label>
+                            <input type="text" class="form-control" id="iReferencia">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" onclick="guardarItem()">
+                    <i class="bi bi-save me-1"></i>Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL: Ajustar stock ===== -->
+<div class="modal fade" id="modalStock" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="stockTitle">Ajustar Stock</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small">Ingresa un valor positivo para agregar stock o negativo para descontar. La cantidad no puede quedar en negativo.</p>
+                <div class="mb-3">
+                    <label class="form-label">Delta (ej: +50 o -10)</label>
+                    <input type="number" class="form-control" id="stockDelta">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Motivo</label>
+                    <input type="text" class="form-control" id="stockMotivo" placeholder="Recepci&oacute;n, merma, despacho...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" onclick="confirmarAjusteStock()">Aplicar Ajuste</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL: Atender solicitud ===== -->
+<div class="modal fade" id="modalAtender" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="atenderTitle">Atender Solicitud</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="atenderBody"></div>
+            <div class="modal-footer" id="atenderPie"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/config.js?v=20260530-4"></script>
+<script src="js/inventario.js"></script>
+</body>
+</html>
+
+
+
